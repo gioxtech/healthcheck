@@ -13,7 +13,8 @@ To make your life easy we already have staticaly pre-compiled releases, to start
 ```dockerfile
 ENV HEALTHCHECKER_VERSION 1.0.0
 ENV HEALTHCHECKER_URL https://github.com/gioxtech/healthcheck/releases/download/v${HEALTHCHECKER_VERSION}/healthcheck-${HEALTHCHECKER_VERSION}
-RUN wget ${HEALTHCHECKER_URL} -O /usr/bin/healthcheck
+RUN wget ${HEALTHCHECKER_URL} -O /usr/bin/healthcheck && \
+    chmod +x /usr/bin/healthcheck
 
 HEALTHCHECK --start-period=15s --interval=15s --timeout=1s --retries=6 CMD healthcheck -host-addr http://localhost/health
 ```
