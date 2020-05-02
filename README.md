@@ -11,10 +11,21 @@ If you're asking yourself why do you need that? If you say yes for any of these 
 To make your life easy we already have staticaly pre-compiled releases, to start to use add the following commands to your `Dockerfile`:
 
 ```dockerfile
-ENV HEALTHCHECK_VERSION 1.0.0
+ENV HEALTHCHECK_VERSION 1.1.0
 ENV HEALTHCHECK_URL https://github.com/gioxtech/healthcheck/releases/download/v${HEALTHCHECK_VERSION}/healthcheck-${HEALTHCHECK_VERSION}
 RUN wget ${HEALTHCHECK_URL} -O /usr/bin/healthcheck && \
     chmod +x /usr/bin/healthcheck
 
 HEALTHCHECK --start-period=15s --interval=15s --timeout=1s --retries=6 CMD healthcheck -http-addr http://localhost/health
+```
+
+## Building
+
+```shell
+$ docker \
+    run \
+    --rm \
+    -v `pwd`:/go/src/github.com/gioxtech/healthcheck golang:1.14-alpine \
+    go build \
+    -o /go/src/github.com/gioxtech/healthcheck/healthcheck-1.1.0 /go/src/github.com/gioxtech/healthcheck
 ```
