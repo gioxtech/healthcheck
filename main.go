@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 
 var (
 	httpAddrFlag = flag.String("http-addr", "", "http addr to check if service is health")
+	insecureFlag = flag.Bool("insecure", false, "if invalid certificate should be ignored or not")
 )
 
 func init() {
@@ -18,6 +20,13 @@ func init() {
 
 func main() {
 	if httpAddr := *httpAddrFlag; httpAddr != "" {
+		if *insecureFlag {
+			httpTransport := http.DefaultTransport.(*http.Transport)
+			httpTransport.TLSClientConfig = &tls.Config{
+				InsecureSkipVerify: true,
+			}
+		}
+
 		resp, err := http.Get(httpAddr)
 		if err != nil {
 			fmt.Println("Unable to perform health check:", err.Error())
